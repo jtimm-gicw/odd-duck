@@ -21,7 +21,7 @@ function Product(name, path) {
 // Regular Functions
 function createAlbum() {
   for (let i = 0; i < productName.length; i++) {
-    let product = new Product(productName[i], 'img/' + productName[i] + '.jpeg');
+    let product = new Product(productName[i], 'img/' + productName[i] + '.jpg');
     state.allProducts.push(product);
   }
 }
