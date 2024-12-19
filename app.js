@@ -38,7 +38,7 @@ const productRank = {
   midElement: document.getElementById('img2'),
   rightElement: document.getElementById('img3'),
   imgElement: document.getElementById('productImages'),
-  resultElement: document.getElementById('result'),
+  resultElement: document.getElementById('results'),
   resultsButton: document.getElementById('showResults'),
   resetButton: document.getElementById('reset'),
 /* totalClicks: Tracks how many times users have clicked on images.
@@ -122,6 +122,7 @@ state.allProducts: This function relies on the state.allProducts array, which ho
       const str = state.allProducts[i].name + ' has ' + state.allProducts[i].total + ' votes.';
       liElOne.textContent = str;
       ulEl.appendChild(liElOne);
+
     } /* document.createElement('li'):
 
     Creates an empty <li> (list item) in memory.
@@ -144,8 +145,14 @@ state.allProducts: This function relies on the state.allProducts array, which ho
     const liElTwo = document.createElement('li');
     liElTwo.textContent = 'Total User Clicks: ' + productRank.totalClicks;
     ulEl.appendChild(liElTwo);
+
+    myChart.data.datasets[0].data= state.allProducts.map(product => product.total);
+    myChart.update();
+
     this.resultElement.appendChild(ulEl);
-  },
+  }
+  
+  ,
 /* document.createElement('li'):
 
 Creates another <li> (list item) for the total clicks.
@@ -204,6 +211,27 @@ Adds this total clicks list item to the unordered list.*/
   }
 };
 
+const chart= document.getElementById('myChart').getContext('2d');
+const myChart= new Chart(chart,  {
+  type: 'bar',
+  data: {
+    labels: productName,
+    datasets: [{
+      label: 'total clicks',
+      data: new Array(productName.length).fill(0),
+      backgroundColor: 'rgba(75,192, 12, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+  }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
 // Initialize the app
 createAlbum();
 productRank.imgElement.addEventListener('click', productRank.onClick.bind(productRank));
