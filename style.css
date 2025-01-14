@@ -21,7 +21,32 @@ section {
     padding: 10px;
 }
 
-#chartContainer {
-    flex: 1;
-    padding: 10px;
-}
+#productImages {
+    display: flex;
+    justify-content: space-between; /* Adjust spacing between images */
+    align-items: center; /* Vertically align images */
+    width: auto;
+    height: auto;
+  }
+  
+  .three-cols {
+    width: 30%; /* Adjust width as needed */
+    max-width: 100%; /* Ensure responsiveness */
+    margin: 20px;
+    padding: 20px;
+  }
+
+  #showResults{
+    width: 300px;
+    height: 175px;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  p {
+    font-size: 54px;
+  }
+  
