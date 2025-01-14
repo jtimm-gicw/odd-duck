@@ -248,3 +248,16 @@ Summary of Flow:
 - Results: After 25 clicks, results are shown using displayResults.
 - Reset: A reset button refreshes the page.
 */
+
+const products = JSON.stringify(productName);
+
+localStorage.setItem(productName, products);
+
+function Product (name) {
+  this.name = name
+};
+
+const savedProductsJSON = localStorage.getItem('products');
+const savedProducts = JSON.parse(savedProductsJSON);
+
+console.log(savedProducts);
