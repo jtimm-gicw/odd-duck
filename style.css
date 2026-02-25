@@ -1,91 +1,194 @@
+/* Global reset */
 * {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    padding: 10px;
-    margin: 10px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Georgia, serif;
 }
 
-section {
-    border: 2px solid;
-    border-radius: 25px;
-    margin-bottom: 10px;
-    height: 600px;
-    width: auto;
-    background-color: aquamarine;
-    display: flex; 
-    justify-content: 25px;
+body {
+  text-align: center;
+  background-color: #f5f5f5;
 }
 
-#results {
-    flex: 1;
-    overflow-y: auto;
-    padding: 50px;
-    font-size: 45px;
-    overflow: auto;
-}
-
-#productImages {
-    display: flex;
-    justify-content: space-between; /* Adjust spacing between images */
-    align-items: center; /* Vertically align images */
-    width: auto;
-    height: auto;
-  }
-  
-  .three-cols {
-    width: 30%; /* Adjust width as needed */
-    max-width: 100%; /* Ensure responsiveness */
-    margin: 20px;
-    padding: 20px;
-  }
-
-  #showResults, #reset{
-    width: 300px;
-    height: 175px;
-    font-size: 25px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #reset {
-    font-size: 25px;
-  }
-
-  p {
-    font-size: 60px;
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-    font-weight: bold;
-    color: white;
-
-  }
-
-  #button  {
-    display: flex;
-    gap: 10px; /* Space between buttons */
-    justify-content: center;
-    border-radius: 25px;
-    padding: 40px;
-    gap: 100px;
-}
-
-h2 {
-    font-size: 80px;
-    font-weight: bold;
-    padding: 40px;
-}
-
+/* Header styling */
 .container1 {
-    border: 4px solid black;
-    background-color: indianred;
-    height: 220px;
-    width: 900px;
-    display: flex;
-    justify-content: center; /* Centers content horizontally inside the container */
-    align-items: center; /* Centers content vertically inside the container */
-    margin: 50px auto 0 auto; /* Adds a 50px margin at the top and centers horizontally */
-    position: relative; /* Adjusts the positioning without absolute centering */
+  background-color: indianred;
+  color: white;
+  padding: 40px;
 }
-  
+
+/* Image layout */
+#productImages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 40px;
+}
+
+/* Product image styling */
+.product-img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain; /* Maintains aspect ratio */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.product-img:hover {
+  transform: scale(1.05);
+}
+
+/* Buttons */
+#buttonSection {
+  margin: 30px;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+/* ================================
+   GENERAL PAGE STYLING
+   Gives the whole page a retro feel
+================================= */
+
+/* Import a retro-style Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif; /* Clean readable body font */
+  background-color: #fdf0d5; /* Soft cream background */
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* ================================
+   HEADER STYLE
+   Big bold retro title
+================================= */
+
+h1 {
+  font-family: 'Fredoka One', cursive; /* Retro bubble font */
+  font-size: 3rem;
+  color: #f9f5f7; /* Hot pink */
+  text-shadow: 3px 3px 0px #3a86ff; /* Blue offset shadow for retro look */
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+/* ================================
+   MAIN CONTAINER
+   Card-style retro panel
+================================= */
+
+.container {
+  width: 60%;
+  margin: 30px auto;
+  background-color: #ffffff;
+  border: 5px solid #ffbe0b; /* Thick yellow border */
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 8px 8px 0px #fb5607; /* Hard shadow for retro effect */
+}
+
+/* ================================
+   BUTTON STYLING
+   Bold 60s-style colorful buttons
+================================= */
+
+button {
+  background-color: #3a86ff; /* Bright blue */
+  color: white;
+  font-weight: bold;
+  border: 3px solid black;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+/* Button hover effect */
+button:hover {
+  background-color: #ff006e; /* Pink on hover */
+  transform: scale(1.05); /* Slight pop effect */
+}
+
+/* Button click effect */
+button:active {
+  transform: scale(0.95);
+}
+
+/* ===============================
+   RESULTS SECTION STYLING
+   Retro 1950s / 60s Diner Style
+   =============================== */
+
+#resultsSection {
+  margin-top: 50px;
+  padding: 30px;
+  background-color: #fff8e7; /* Cream retro background */
+  border-top: 6px solid #ff006e; /* Bold hot pink stripe */
+  box-shadow: 0 -6px 0 #3a86ff; /* Retro hard shadow accent */
+}
+
+/* Remove default bullets */
+#results ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Each result item styled like a retro card */
+#results li {
+  background-color: #ffbe0b; /* Mustard yellow */
+  margin: 20px auto;
+  padding: 18px 25px;
+  width: 70%;
+  border-radius: 20px; /* Round bubble look */
+  border: 4px solid black; /* Thick retro border */
+  box-shadow: 6px 6px 0 #fb5607; /* Hard offset shadow */
+  font-size: 18px;
+  line-height: 1.6;
+  transition: transform 0.2s ease;
+}
+
+/* Slight pop effect on hover */
+#results li:hover {
+  transform: rotate(-1deg) scale(1.02);
+}
+
+/* Product name emphasis */
+.product-name {
+  font-weight: bold;
+  color: #ff006e; /* Hot pink */
+  font-size: 22px;
+  text-transform: uppercase; /* Retro bold menu feel */
+  letter-spacing: 1px;
+}
+
+/* Vote count styling */
+.vote-count {
+  font-weight: bold;
+  color: #3a86ff; /* Bright blue */
+  font-size: 20px;
+}
+
+/* View count styling */
+.view-count {
+  color: #222;
+  font-weight: bold;
+}
+
+/* Percentage styling */
+.percentage {
+  font-style: italic;
+  color: #8338ec; /* Funky purple */
+  font-weight: bold;
+}

@@ -1,151 +1,216 @@
 'use strict';
 
-// Global Variables
-const productName = [
-  'boots', 'bathroom', 'breakfast', 'bubblegum', 'chair',
-  'dog-duck', 'tauntaun', 'scissors', 'water-can', 'wine-glass',
-  'bag', 'banana', 'cthulhu', 'dragon', 'pen', 'pet-sweep',
-  'shark', 'sweep', 'unicorn'
+/* =====================================
+   PRODUCT IMAGE NAMES
+   ===================================== */
+
+const productNames = [
+  'boots','bathroom','breakfast','bubblegum','chair',
+  'dog-duck','tauntaun','scissors','water-can','wine-glass',
+  'bag','banana','cthulhu','dragon','pen','pet-sweep',
+  'shark','sweep','unicorn'
 ];
 
+/* =====================================
+   APPLICATION STATE
+   ===================================== */
+
 const state = {
-  allProducts: [],
+  allProducts: []
 };
 
-// Product Constructor
-function Product(name, path) {
+
+/* =====================================
+   PRODUCT CONSTRUCTOR
+   Creates a product object and stores:
+   - name
+   - image path
+   - votes
+   - views
+   ===================================== */
+
+function Product(name) {
   this.name = name;
-  this.path = path;
-  this.total = 0;
+  this.path = `img/${name}.jpg`;
+  this.votes = 0;
   this.views = 0;
+
+  state.allProducts.push(this);
 }
 
-// Save to LocalStorage
-function saveToLocalStorage() {
-  localStorage.setItem('productData', JSON.stringify(state.allProducts));
-}
 
-// Load from LocalStorage
-function loadFromLocalStorage() {
-  const data = JSON.parse(localStorage.getItem('productData'));
-  if (data) {
-    state.allProducts = data.map(item => {
-      const product = new Product(item.name, item.path);
-      product.total = item.total;
-      product.views = item.views;
-      return product;
-    });
-    console.log("Loaded from localStorage:");
-    state.allProducts.forEach(product => {
-      console.log(`Product: ${product.name}, Votes: ${product.total}, Views: ${product.views}`);
-    });
+/* =====================================
+   CREATE ALL PRODUCTS
+   ===================================== */
+
+function createProducts() {
+  for (let name of productNames) {
+    new Product(name);
   }
 }
 
-// Initialize Products
-function createAlbum() {
-  if (state.allProducts.length === 0) {
-    for (const name of productName) {
-      state.allProducts.push(new Product(name, `img/${name}.jpg`));
-    }
-  }
-}
 
-// Main Logic
-const productRank = {
+/* =====================================
+   MAIN APP OBJECT
+   ===================================== */
+
+const app = {
+
   totalClicks: 0,
-  rounds: 25,
-  left: null,
-  mid: null,
-  right: null,
-  leftElement: document.getElementById('img1'),
-  midElement: document.getElementById('img2'),
-  rightElement: document.getElementById('img3'),
-  imgElement: document.getElementById('productImages'),
-  resultElement: document.getElementById('results'),
+  maxRounds: 25,
+  previousIndices: [],
+
+  imageSection: document.getElementById('productImages'),
+  img1: document.getElementById('img1'),
+  img2: document.getElementById('img2'),
+  img3: document.getElementById('img3'),
+  resultsDiv: document.getElementById('results'),
   resultsButton: document.getElementById('showResults'),
   resetButton: document.getElementById('reset'),
 
-  getRandomIndex: function () {
+
+  /* =====================================
+     GET RANDOM INDEX
+     ===================================== */
+  getRandomIndex() {
     return Math.floor(Math.random() * state.allProducts.length);
   },
 
-  displayImages: function () {
-    let indices = new Set();
-    while (indices.size < 3) {
-      indices.add(this.getRandomIndex());
-    }
-    const [leftIdx, midIdx, rightIdx] = [...indices];
-    [this.left, this.mid, this.right] = [
-      state.allProducts[leftIdx],
-      state.allProducts[midIdx],
-      state.allProducts[rightIdx]
-    ];
-    this.left.views++;
-    this.mid.views++;
-    this.right.views++;
-    this.leftElement.src = this.left.path;
-    this.leftElement.id = this.left.name;
-    this.midElement.src = this.mid.path;
-    this.midElement.id = this.mid.name;
-    this.rightElement.src = this.right.path;
-    this.rightElement.id = this.right.name;
-    saveToLocalStorage();
-  },
 
-  allyClicks: function (elId) {
-    const clickedProduct = state.allProducts.find(product => product.name === elId);
-    if (clickedProduct) {
-      clickedProduct.total++;
-      this.totalClicks++;
-      console.log(`Votes for ${clickedProduct.name}: ${clickedProduct.total}`);
-      saveToLocalStorage();
-      if (this.totalClicks === this.rounds) {
-        this.showButton();
-      } else {
-        this.displayImages();
+  /* =====================================
+     DISPLAY 3 UNIQUE IMAGES
+     - No duplicates in same round
+     - No duplicates from previous round
+     ===================================== */
+  displayImages() {
+
+    let indices = [];
+
+    while (indices.length < 3) {
+
+      let randomIndex = this.getRandomIndex();
+
+      if (
+        !indices.includes(randomIndex) &&
+        !this.previousIndices.includes(randomIndex)
+      ) {
+        indices.push(randomIndex);
       }
     }
+
+    this.previousIndices = indices;
+
+    const [p1, p2, p3] = indices.map(i => state.allProducts[i]);
+
+    // Increment views
+    p1.views++;
+    p2.views++;
+    p3.views++;
+
+    // Update DOM
+    this.img1.src = p1.path;
+    this.img1.alt = p1.name;
+    this.img1.dataset.name = p1.name;
+
+    this.img2.src = p2.path;
+    this.img2.alt = p2.name;
+    this.img2.dataset.name = p2.name;
+
+    this.img3.src = p3.path;
+    this.img3.alt = p3.name;
+    this.img3.dataset.name = p3.name;
   },
 
-  displayResults: function () {
-    this.resultElement.innerHTML = ''; // Clears previous results
-    const ulEl = document.createElement('ul');
-    for (const product of state.allProducts) {
-      const liEl = document.createElement('li');
-      liEl.textContent = `${product.name} has ${product.total} votes and was viewed ${product.views} times.`;
-      ulEl.appendChild(liEl);
+
+  /* =====================================
+     HANDLE IMAGE CLICK
+     - Adds vote
+     - Stops at 25 rounds
+     ===================================== */
+  handleClick(event) {
+
+    const clickedName = event.target.dataset.name;
+
+    // If user clicks outside an image, ignore
+    if (!clickedName) return;
+
+    const clickedProduct = state.allProducts.find(
+      product => product.name === clickedName
+    );
+
+    clickedProduct.votes++;
+    this.totalClicks++;
+
+    if (this.totalClicks >= this.maxRounds) {
+
+      // Stop image clicking
+      this.imageSection.removeEventListener('click', this.boundClick);
+
+      // Show results button
+      this.resultsButton.hidden = false;
+
+    } else {
+      this.displayImages();
     }
-    const liElTwo = document.createElement('li');
-    liElTwo.textContent = `Total User Clicks: ${this.totalClicks}`;
-    ulEl.appendChild(liElTwo);
-    this.resultElement.appendChild(ulEl);
   },
 
-  showButton: function () {
-    this.resultsButton.hidden = false;
-    this.resultsButton.addEventListener('click', () => {
-      this.resultsButton.hidden = true;
-      this.resetButton.hidden = false;
-      this.displayResults();
-      this.resetButton.addEventListener('click', () => {
-        localStorage.removeItem('productData');
-        location.reload();
-      });
-    });
-  },
 
-  onClick: function (event) {
-    if ([this.left.name, this.mid.name, this.right.name].includes(event.target.id)) {
-      this.allyClicks(event.target.id);
+  /* =====================================
+     DISPLAY RESULTS
+     - Shows votes
+     - Shows views
+     - Shows percentage clicked
+     ===================================== */
+  displayResults() {
+
+    this.resultsDiv.innerHTML = '';
+
+    const ul = document.createElement('ul');
+
+    for (let product of state.allProducts) {
+
+      const li = document.createElement('li');
+
+      const percentage =
+        product.views === 0
+          ? 0
+          : ((product.votes / product.views) * 100).toFixed(1);
+
+      li.innerHTML = `
+        <span class="product-name">${product.name}</span> had 
+        <span class="vote-count">${product.votes}</span> votes, 
+        was seen <span class="view-count">${product.views}</span> times, 
+        and had a <span class="percentage">${percentage}%</span> click rate.
+      `;
+
+      ul.appendChild(li);
     }
+
+    this.resultsDiv.appendChild(ul);
+
+    this.resultsButton.hidden = true;
+    this.resetButton.hidden = false;
   }
 };
 
-// Event Listeners
-productRank.imgElement.addEventListener('click', event => productRank.onClick(event));
 
-// Initialize App
-loadFromLocalStorage();
-createAlbum();
-productRank.displayImages();
+/* =====================================
+   EVENT LISTENERS
+   ===================================== */
+
+// Bind once so we can remove later
+app.boundClick = app.handleClick.bind(app);
+
+app.imageSection.addEventListener('click', app.boundClick);
+
+app.resultsButton.addEventListener('click', () => app.displayResults());
+
+app.resetButton.addEventListener('click', () => location.reload());
+
+
+/* =====================================
+   INITIALIZE APP
+   ===================================== */
+
+createProducts();
+app.displayImages();
